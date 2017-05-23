@@ -77,7 +77,7 @@ export default class control {
   /**
    * Class method to register supported controls and their associated classes
    * @param {Array} types - control type (or array of control types) to register
-   * against the specifed class
+   * against the specified class
    * @param {Class} controlClass - class to map against the types
    * @param {String} parentType - optional - if defined, any classes registered
    * will be registered as subtypes of this parent
@@ -98,7 +98,6 @@ export default class control {
     for (let type of types) {
       // '.' is a restricted character for type names
       if (type.indexOf('.') > -1) {
-        // eslint-disable-next-line max-len
         control.error(`Ignoring type ${type}. Cannot use the character '.' in a type name.`);
         continue;
       }
@@ -114,6 +113,7 @@ export default class control {
    */
   static getRegistered(type=false) {
     let types = Object.keys(control.classRegister);
+    console.log(types);
     if (!types.length) {
       return types;
     }

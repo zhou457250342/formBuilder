@@ -32,6 +32,7 @@ export default class controlCustom extends control {
     // build the control label & icon definitions
     for (let field of fields) {
       let type = field.type;
+      let subtype = field.subtype || field.attrs.subtype;
       field.attrs = field.attrs || {};
       if (!type) {
         if (!field.attrs.type) {
@@ -41,8 +42,14 @@ export default class controlCustom extends control {
         type = field.attrs.type;
       }
 
+      let registerKey = subtype ? `${type}.${subtype}` : type;
+      let templateKey = registerKey.replace('.', '-');
+      if (this.classRegister[registerKey]) {
+        templates[templateKey] = controlCustom.templates[templateKey] = this.classRegister[templateKey] = this.classRegister[registerKey];
+      }
+
       // ensure there is a template defined for this field
-      if (!templates[type]) {
+      if (!templates[type] && !templates[templateKey]) {
         this.error('Error while registering custom field: ' + field + '. Unable to find a related defined template.');
       }
 

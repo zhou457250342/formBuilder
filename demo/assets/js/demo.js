@@ -6,6 +6,12 @@ jQuery(function($) {
         type: 'starRating'
       },
       icon: '🌟'
+    },
+    {
+      label: 'Email',
+        type: 'text',
+        subtype: 'email',
+      icon: '✉'
     }
   ];
 
@@ -107,7 +113,7 @@ jQuery(function($) {
     inputSets: inputSets,
     typeUserDisabledAttrs: typeUserDisabledAttrs,
     typeUserAttrs: typeUserAttrs,
-    disableInjectedStyle: false,
+    disableInjectedStyle: false
     // disabledAttrs
   };
   var formData = window.sessionStorage.getItem('formData');
