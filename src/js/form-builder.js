@@ -286,7 +286,6 @@ const FormBuilder = function(opts, element) {
       // get the default type etc & label for this field
       field.type = $field[0].dataset.type;
       if (field.type) {
-        console.log('field.type => ', field.type);
         let controlClass = control.getClass(field.type);
         field.label = controlClass.label(field.type);
         // @todo: any other attrs ever set in aFields? value or selected?
@@ -331,6 +330,8 @@ const FormBuilder = function(opts, element) {
     if (match) {
       field.style = match[1];
     }
+
+    console.log(field);
 
     appendNewField(field, isNew);
 
