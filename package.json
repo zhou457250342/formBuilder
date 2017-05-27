@@ -101,7 +101,7 @@
   "scripts": {
     "test": "npm test",
     "test:watch": "npm test -- --reporter min --watch",
-    "deploy": "babel-node -- node_modules/gulp/bin/gulp deploy",
+    "deploy": "babel-node -- tools/run deploy",
     "start": "babel-node -- node_modules/webpack/bin/webpack -d --progress --config tools/webpack.config | babel-node -- node_modules/webpack-dev-server/bin/webpack-dev-server --config tools/webpack.config",
     "build": "babel-node -- node_modules/webpack/bin/webpack -p --progress --config tools/webpack.config && cp demo/assets/js/form-* dist/",
     "tag": "babel-node -- tools/run tag",
