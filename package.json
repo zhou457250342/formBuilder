@@ -51,7 +51,7 @@
         "demo/assets/sass/site.scss"
       ]
     },
-    "fontServer": "http://fontello.com"
+    "fontServer": "fontello.com"
   },
   "browserify": {
     "transform": [
@@ -105,6 +105,7 @@
     "start": "babel-node -- node_modules/webpack/bin/webpack -d --progress --config tools/webpack.config | babel-node -- node_modules/webpack-dev-server/bin/webpack-dev-server --config tools/webpack.config",
     "build": "babel-node -- node_modules/webpack/bin/webpack -p --progress --config tools/webpack.config && cp demo/assets/js/form-* dist/",
     "tag": "babel-node -- tools/run tag",
+    "font": "babel-node -- tools/run font",
     "release:patch": "npm run tag patch && npm run deploy",
     "release:minor": "npm run tag minor && npm run deploy",
     "build:vendor": "babel-node -- tools/run build-vendor",
