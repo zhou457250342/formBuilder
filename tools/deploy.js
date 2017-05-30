@@ -6,11 +6,11 @@ import {exec} from 'child_process';
 
 /**
  * Build, push, tag and npm publish
- * @param  {String} version [description]
+ * @param  {String} version
  */
 function deploy(version) {
   // Deploy Demo
-  exec('git push origin $(git subtree split --prefix demo master):gh-pages --force', function(err, stdout, stderr) {
+  exec('git push upstream $(git subtree split --prefix demo master):gh-pages --force', function(err, stdout, stderr) {
     // Deploy Site
     exec('cd site && gulp deploy && cd ../', function(err, stdout, stderr) {
       if (!stderr) {
