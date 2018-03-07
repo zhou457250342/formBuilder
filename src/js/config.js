@@ -8,6 +8,7 @@ export const defaultOptions = {
     'checkbox',
     'checkbox-group',
     'date',
+    //'dateCustomer',//[DUBUG—ZHOUX]
     'file',
     'header',
     'hidden',
