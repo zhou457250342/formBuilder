@@ -141,7 +141,7 @@ const FormBuilder = function(opts, element) {
     placeholder: 'frmb-placeholder',
   })
 
-  // ControlBox with different fields
+  // ControlBox with different fields (控件列表对象初始化)
   $cbUL.sortable({
     helper: 'clone',
     opacity: 0.9,
@@ -279,7 +279,8 @@ const FormBuilder = function(opts, element) {
     return cancelArray.some(elem => elem === true)
   }
 
-  // builds the standard formbuilder datastructure for a feild definition
+
+  // builds the standard formbuilder datastructure for a feild definition（添加控件）
   let prepFieldVars = function($field, isNew = false) {
     let field = {}
     if ($field instanceof jQuery) {
