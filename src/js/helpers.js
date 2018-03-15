@@ -17,12 +17,14 @@ export default class Helpers {
    * Setup defaults, get instance data and dom
    * @param  {String} formID [description]
    * @param {Object} layout object instance used by various helpers
+   * @param {Object} refdataContext object instance used by various helpers
    */
-  constructor(formID, layout) {
+  constructor(formID, layout , refdataContext) {
     this.data = instanceData[formID]
     this.d = instanceDom[formID]
     this.doCancel = false
     this.layout = layout
+    this.refdata=refdataContext;
   }
 
   /**
@@ -236,7 +238,10 @@ export default class Helpers {
       })
     }
 
-    return formData
+    return {
+        data:formData,
+        style:this.refdata.style
+    }
   }
 
   /**
@@ -374,8 +379,14 @@ export default class Helpers {
     // determine the control class for this type, and then process it through the layout engine
     let custom = controlCustom.lookup(previewData.type)
     let controlClass = custom ? custom.class : control.getClass(previewData.type, previewData.subtype)
+    
+    // 控制内容控件样式
+    const controlwidth=parseInt(this.refdata.styleRefdata().layout.controlwidth);
+    const controlcellcount=previewData.style_layout_cell?parseInt(previewData.style_layout_cell):0;
+    if(controlcellcount>0)
+       $('#'+$field[0].id).css('width',(controlwidth*controlcellcount)+'%');
     preview = this.layout.build(controlClass, previewData)
-
+   
     empty($prevHolder[0])
     $prevHolder[0].appendChild(preview)
     preview.dispatchEvent(events.fieldRendered)
@@ -791,7 +802,7 @@ export default class Helpers {
       $('.prev-holder', field).toggle()
       editPanel.toggle()
     }
-    this.updatePreview($(field))
+    this.updatePreview($(field)) 
   }
 
   /**
@@ -853,6 +864,7 @@ export default class Helpers {
    */
   showData() {
     const data = this.data
+    // data.formData.style = this.refdata.style;
     const formData = utils.escapeHtml(data.formData)
     const code = m('code', formData, {
       className: `formData-${config.opts.dataType}`,

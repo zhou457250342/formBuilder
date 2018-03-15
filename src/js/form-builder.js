@@ -15,13 +15,16 @@ import controlCustom from './control/custom'
 
 let instanceTime = new Date().getTime()
 
+
 const FormBuilder = function(opts, element) {
   const formBuilder = this
   const i18n = mi18n.current
   const formID = 'frmb-' + instanceTime++
   const data = new Data(formID)
   const d = new Dom(formID)
-
+  formBuilder.style={
+    layout:{}
+  };
   // prepare a new layout object with appropriate templates
   if (!opts.layout) {
     opts.layout = layout
@@ -32,7 +35,7 @@ const FormBuilder = function(opts, element) {
   // of the format control identifier (type, or type.subtype): {options}
   control.controlConfig = opts.controlConfig || {}
 
-  const h = new Helpers(formID, layoutEngine)
+  const h = new Helpers(formID, layoutEngine,formBuilder)  
   const m = utils.markup
 
   const originalOpts = opts
@@ -91,7 +94,9 @@ const FormBuilder = function(opts, element) {
       }
     }
     let icon = custom.icon || controlClass.icon(type)
-    let label = custom.label || controlClass.label(type)
+    // let label = custom.label || controlClass.label(type)  [zhoux]
+    let label= custom.label ? i18n[custom.label] ||custom.label  :controlClass.label(type);
+
     let iconClassName = !icon ? custom.iconClassName || `icon-${type.replace(/-[\d]{4}$/, '')}` : ''
 
     // if the class has specified a custom icon, inject it into the label
@@ -200,6 +205,7 @@ const FormBuilder = function(opts, element) {
     className: 'form-wrap form-builder' + utils.mobileClass(),
   })
 
+  let Style={layout:{cellcount:2}};
   let $editorWrap = $(d.editorWrap)
 
   let cbWrap = m('div', d.controls, {
@@ -322,7 +328,7 @@ const FormBuilder = function(opts, element) {
       field.name = utils.nameAttr(field)
     }
 
-    if (isNew && utils.inArray(field.type, ['text', 'number', 'file', 'date', 'select', 'textarea', 'autocomplete'])) {
+    if (isNew && utils.inArray(field.type, ['text', 'number', 'file', 'date', 'select', 'textarea', 'autocomplete','datetime'])) {
       field.className = field.className || 'form-control'
     }
 
@@ -389,9 +395,9 @@ const FormBuilder = function(opts, element) {
     }
 
     if (!values || !values.length) {
-      let defaultOptCount = [1, 2, 3]
+      let defaultOptCount = [1, 2]
       if (utils.inArray(type, ['checkbox-group', 'checkbox'])) {
-        defaultOptCount = [1]
+        defaultOptCount = [1,2]
       }
       values = defaultOptCount.map(function(index) {
         let label = `${i18n.option} ${index}`
@@ -417,41 +423,51 @@ const FormBuilder = function(opts, element) {
 
     return m('div', fieldOptions, { className: 'form-group field-options' }).outerHTML
   }
-
+ // PlaceHolder 控件内容属性函数
   const defaultFieldAttrs = type => {
-    const defaultAttrs = ['required', 'label', 'description', 'placeholder', 'className', 'name', 'access', 'value']
-    let noValFields = ['header', 'paragraph', 'file', 'autocomplete'].concat(d.optionFields)
+    // const defaultAttrs = ['required', 'label', 'description', 'placeholder', 'className', 'name', 'access', 'value'] [zhoux]
+    const defaultAttrs = ['required', 'label', 'value','regex','datasource','style_layout_cell']
+    let noValFields = ['header', 'paragraph', 'file'];
 
     let valueField = !utils.inArray(type, noValFields)
 
     const typeAttrsMap = {
-      autocomplete: defaultAttrs.concat(['options']),
+      autocomplete: defaultAttrs,
       button: ['label', 'subtype', 'style', 'className', 'name', 'value', 'access'],
       checkbox: [
         'required',
         'label',
-        'description',
-        'toggle',
-        'inline',
-        'className',
-        'name',
-        'access',
-        'other',
+      //  'description',
+      //  'toggle',
+      //  'inline',
+      //  'className',
+      //  'name',
+      //  'access',
+      //  'other',
+        'value',
+        'datasource',
         'options',
+        'style_layout_cell'
       ],
-      text: defaultAttrs.concat(['subtype', 'maxlength']),
+      // text: defaultAttrs.concat(['subtype', 'maxlength']), [zhoux]
+      text: defaultAttrs,
       date: defaultAttrs,
-      file: defaultAttrs.concat(['subtype', 'multiple']),
-      header: ['label', 'subtype', 'className', 'access'],
+      datetime:defaultAttrs.concat(['subtype']),
+      file: defaultAttrs.concat(['subtype']),
+      header: ['label', 'subtype'],
       hidden: ['name', 'value', 'access'],
-      paragraph: ['label', 'subtype', 'className', 'access'],
-      number: defaultAttrs.concat(['min', 'max', 'step']),
-      select: defaultAttrs.concat(['multiple', 'options']),
-      textarea: defaultAttrs.concat(['subtype', 'maxlength', 'rows']),
+      // paragraph: ['label', 'subtype', 'className', 'access'],
+      // number: defaultAttrs.concat(['min', 'max', 'step']), 
+      number: defaultAttrs,
+      // select: defaultAttrs.concat(['multiple', 'options']),
+      select: defaultAttrs.concat(['options']),
+      // textarea: defaultAttrs.concat(['subtype', 'maxlength', 'rows']),
+      textarea: defaultAttrs.concat(['subtype']),
     }
 
     typeAttrsMap['checkbox-group'] = typeAttrsMap.checkbox
     typeAttrsMap['radio-group'] = typeAttrsMap.checkbox
+    typeAttrsMap['radio'] = typeAttrsMap.checkbox
 
     let typeAttrs = typeAttrsMap[type]
 
@@ -464,9 +480,9 @@ const FormBuilder = function(opts, element) {
       utils.remove('description', typeAttrs)
     }
 
-    if (!valueField) {
-      utils.remove('value', typeAttrs)
-    }
+     if (!valueField) {
+       utils.remove('value', typeAttrs)
+     }
 
     return typeAttrs || defaultAttrs
   }
@@ -475,6 +491,7 @@ const FormBuilder = function(opts, element) {
    * Build the editable properties for the field
    * @param  {object} values configuration object for advanced fields
    * @return {String}        markup for advanced fields
+   * PlaceHolder属性加载
    */
   let advFields = values => {
     let { type } = values
@@ -491,6 +508,9 @@ const FormBuilder = function(opts, element) {
 
         return boolAttribute('inline', values, labels)
       },
+      regex:()=> textAttribute('regex', values),
+      datasource:()=> textAttribute('datasource', values),
+      style_layout_cell:()=>textAttribute('style_layout_cell',values),
       label: () => textAttribute('label', values),
       description: () => textAttribute('description', values),
       subtype: () => selectAttribute('subtype', values, subtypes[type]),
@@ -587,7 +607,7 @@ const FormBuilder = function(opts, element) {
       }
 
       if (useDefaultAttr.every(use => use === true)) {
-        advFields.push(advFieldMap[attr]())
+          advFields.push(advFieldMap[attr]())
       }
     })
 
@@ -731,7 +751,6 @@ const FormBuilder = function(opts, element) {
       className: `form-group ${name}-wrap`,
     }).outerHTML
   }
-
   const btnStyles = style => {
     let styleField = ''
 
@@ -914,11 +933,11 @@ const FormBuilder = function(opts, element) {
 
     return requireField
   }
-
+  
   // Append the new field to the editor
   let appendNewField = function(values, isNew = true) {
     let type = values.type || 'text'
-    let label = values.label || i18n[type] || i18n.label
+    let label = i18n[values.label] || values.label || i18n[type] || i18n.label
     let disabledFieldButtons = opts.disabledFieldButtons[type] || values.disabledFieldButtons
     let fieldButtons = [
       m('a', null, {
@@ -974,9 +993,11 @@ const FormBuilder = function(opts, element) {
     })
     liContents.push(m('div', formElements, { id: `${data.lastID}-holder`, className: 'frm-holder' }))
 
+    // 控件宽度计算
     let field = m('li', liContents, {
       class: type + '-field form-field',
       type: type,
+      style:'width:'+ formBuilder.styleRefdata().layout.controlwidth, 
       id: data.lastID,
     })
     let $li = $(field)
@@ -1127,7 +1148,7 @@ const FormBuilder = function(opts, element) {
       let targetID = $(e.target)
         .parents('.form-field:eq(0)')
         .attr('id')
-      h.toggleEdit(targetID)
+      h.toggleEdit(targetID,true)
       e.handled = true
     } else {
       return false
@@ -1146,7 +1167,7 @@ const FormBuilder = function(opts, element) {
           : $(e.target)
               .closest('li.form-field')
               .attr('id')
-      h.toggleEdit(targetID)
+      h.toggleEdit(targetID,true)
       e.handled = true
     }
   })
@@ -1370,6 +1391,15 @@ const FormBuilder = function(opts, element) {
 
   document.dispatchEvent(events.loaded)
 
+  formBuilder.styleRefdata = ()=>{
+    const cellcount=formBuilder.style.layout.cellcount?formBuilder.style.layout.cellcount:5;
+    return {
+      layout:{
+        controlwidth:(100/parseInt(cellcount))+'%'
+      }
+    };
+  };
+
   // Make actions accessible
   formBuilder.actions = {
     clearFields: animate => h.removeAllFields(d.stage, animate),
@@ -1378,6 +1408,10 @@ const FormBuilder = function(opts, element) {
     addField: (field, index) => {
       h.stopIndex = data.formData.length ? index : undefined
       prepFieldVars(field)
+    },
+    setStyle:style => {
+       formBuilder.style=style;
+       $('.form-field').css('width',formBuilder.styleRefdata().layout.controlwidth);
     },
     removeField: h.removeField.bind(h),
     getData: h.getFormData.bind(h),
@@ -1416,6 +1450,7 @@ const FormBuilder = function(opts, element) {
         addField: null,
         removeField: null,
         clearFields: null,
+
       },
       get formData() {
         return instance.actions.getData('json')

@@ -1,28 +1,21 @@
 jQuery(function($) {
+
   var fields = [
-    {
-      type: 'autocomplete',
-      label: 'Custom Autocomplete',
-      required: true,
-      values: [
-        {label: 'SQL'},
-        {label: 'C#'},
-        {label: 'JavaScript'},
-        {label: 'Java'},
-        {label: 'Python'},
-        {label: 'C++'},
-        {label: 'PHP'},
-        {label: 'Swift'},
-        {label: 'Ruby'}
-      ]
-    },
-    {
-      label: 'Star Rating',
-      attrs: {
-        type: 'starRating'
-      },
-      icon: '🌟'
-    }
+    // {
+    //   type: 'checkbox',
+    //   label: '复选框',
+    //   values: [
+    //     {label: '选项1'},
+    //     {label: '选项2'}
+    //   ]
+    // },
+    // {
+    //   label: 'Star Rating',
+    //   attrs: {
+    //     type: 'starRating'
+    //   },
+    //   icon: '🌟'
+    // }
   ];
 
   var replaceFields = [
@@ -71,7 +64,7 @@ jQuery(function($) {
           label: 'Profession',
           className: 'form-control',
           values: [{
-            label: 'Street Sweeper',
+           label: 'Street Sweeper', 
             value: 'option-2',
             selected: false
           }, {
@@ -125,9 +118,12 @@ jQuery(function($) {
   var disabledAttrs = ['placeholder'];
 
   var fbOptions = {
-    subtypes: {
-      text: ['datetime-local']
+    i18n: {
+      locale: 'CH'
     },
+   // subtypes: {
+ //     text: ['datetime-local']
+   // },
     onSave: function(e, formData) {
       toggleEdit();
       $('.render-wrap').formRender({
@@ -140,15 +136,14 @@ jQuery(function($) {
       enable: true
     },
     sortableControls: true,
-    fields: fields,
-    templates: templates,
-    inputSets: inputSets,
+    //fields: fields,
+    //templates: templates,
+    //inputSets: inputSets,
     typeUserDisabledAttrs: typeUserDisabledAttrs,
-    typeUserAttrs: typeUserAttrs,
+    // typeUserAttrs: typeUserAttrs,
     disableInjectedStyle: false,
     actionButtons: actionButtons,
-    disableFields: ['autocomplete'],
-    replaceFields: replaceFields,
+    // replaceFields: replaceFields,
     disabledFieldButtons: {
       text: ['copy']
     }
@@ -175,8 +170,8 @@ jQuery(function($) {
 
   var formBuilder = $('.build-wrap').formBuilder(fbOptions);
   var fbPromise = formBuilder.promise;
-
   fbPromise.then(function(fb) {
+   
     var apiBtns = {
       showData: fb.actions.showData,
       clearFields: fb.actions.clearFields,
@@ -186,14 +181,14 @@ jQuery(function($) {
       setData: function() {
         fb.actions.setData(setFormData);
       },
-      addField: function() {
-        var field = {
-            type: 'text',
-            class: 'form-control',
-            label: 'Text Field added at: ' + new Date().getTime()
-          };
-        fb.actions.addField(field);
-      },
+     // addField: function() {
+     //   var field = {
+      //      type: 'text',
+      //      class: 'form-control',
+      //      label: 'Text Field added at: ' + new Date().getTime()
+      //    };
+      //  fb.actions.addField(field);
+     // },
       removeField: function() {
         fb.actions.removeField();
       },
@@ -218,7 +213,6 @@ jQuery(function($) {
         apiBtns[action]();
       });
     });
-
     document.getElementById('setLanguage')
     .addEventListener('change', function(e) {
       fb.actions.setLang(e.target.value);
@@ -239,4 +233,13 @@ jQuery(function($) {
   document.getElementById('edit-form').onclick = function() {
     toggleEdit();
   };
+  $("#btnStyleSave").click(function(){
+     formBuilder.actions.setStyle(
+       {
+         layout:
+          {
+            cellcount: $("#txtcell").val()
+          }
+       });
+  });
 });

@@ -9,6 +9,9 @@ import controlFineUploader from './file.fineuploader';
 import controlTextarea from './textarea';
 import controlTinymce from './textarea.tinymce';
 import controlQuill from './textarea.quill';
+import controllabel from './label';
+import controldatetime from './datetime';
+import controlImageUploader from './file.imageuploader';
 
 export default {
   controlAutocomplete,
@@ -21,6 +24,9 @@ export default {
   controlFineUploader,
   controlTextarea,
   controlTinymce,
-  controlQuill
+  controlQuill,
+  controllabel,
+  controldatetime,
+  controlImageUploader
 };
 

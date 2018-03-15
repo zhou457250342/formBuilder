@@ -218,6 +218,17 @@ textarea.form-control {
   color: $error;
 }
 
+.fb-checkbox .checkbox .checkbox{
+  float:left;
+  margin-top:10px;
+  margin-left:5px;
+}
+.fb-radio .radio .radio{
+  float:left;
+  margin-top:10px;
+  margin-left:5px;
+}
+
 .fb-checkbox-group {
   .checkbox,
   .checkbox-inline{

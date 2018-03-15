@@ -12,7 +12,7 @@ export default class controlSelect extends control {
    */
   static get definition() {
     return {
-      inactive: ['checkbox'],
+      // inactive: ['checkbox'],
       mi18n: {
         minSelectionRequired: 'minSelectionRequired'
       }
@@ -198,4 +198,4 @@ export default class controlSelect extends control {
 }
 
 // register this control for the following types & text subtypes
-control.register(['select', 'checkbox-group', 'radio-group', 'checkbox'], controlSelect);
+control.register(['select', 'checkbox-group', 'radio-group', 'checkbox','radio'], controlSelect);

@@ -102,23 +102,26 @@ export default class controlAutocomplete extends control {
       this.markup('input', null, fauxAttrs),
       this.markup('input', null, hiddenAttrs)
     ];
-
-    const options = values.map(optionData => {
-      let label = optionData.label;
-      let config = {
-        events: {
-          click: evt => {
-            const list = evt.target.parentElement;
-            const field = list.previousSibling.previousSibling;
-            field.value = optionData.label;
-            field.nextSibling.value = optionData.value;
-            this.hideList(list);
-          }
-        },
-        value: optionData.value
-      };
-      return this.markup('li', label, config);
-    });
+    let options={};
+    if(values!=null)
+    {
+        options = values.map(optionData => {
+        let label = optionData.label;
+        let config = {
+          events: {
+            click: evt => {
+              const list = evt.target.parentElement;
+              const field = list.previousSibling.previousSibling;
+              field.value = optionData.label;
+              field.nextSibling.value = optionData.value;
+              this.hideList(list);
+            }
+          },
+          value: optionData.value
+        };
+        return this.markup('li', label, config);
+      });
+    }
 
     field.push(this.markup('ul', options,
       {id: `${data.id}-list`, className: `fb-${type}-list`}));
